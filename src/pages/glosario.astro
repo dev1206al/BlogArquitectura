@@ -154,10 +154,12 @@ const glossary = parseGlossary(readPublicText("Glosario.txt"));
     --bg: #16222e;
     --surface: #1f2e3b;
     --text: #e9eff4;
-    --text-muted: #9db4c2;
-    --accent: #7fb0c4;
-    --border: #33485a;
+    --text-muted: #b0c8d4;
+    --accent: #a8d0e0;
+    --border: #3d5568;
     --shadow-color: rgba(0, 0, 0, 0.45);
+    --text-soft: #b8c6cf;
+    --text-subtle: #a8b8c2;
   }
 
   * {
@@ -231,10 +233,13 @@ const glossary = parseGlossary(readPublicText("Glosario.txt"));
 
   .brand {
     gap: 18px;
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .logo-group {
     gap: 12px;
+    flex-shrink: 1;
   }
 
   .logo-slot {
@@ -396,6 +401,24 @@ const glossary = parseGlossary(readPublicText("Glosario.txt"));
     line-height: 1.65;
   }
 
+  @media (max-width: 860px) {
+    .navbar {
+      gap: 12px;
+    }
+
+    .logo {
+      height: 34px;
+    }
+
+    .logo-taller {
+      max-height: 40px;
+    }
+
+    .student-name {
+      font-size: 0.9rem;
+    }
+  }
+
   @media (max-width: 640px) {
     .navbar,
     .page-hero,
@@ -404,38 +427,50 @@ const glossary = parseGlossary(readPublicText("Glosario.txt"));
     }
 
     .navbar {
-      align-items: flex-start;
-      flex-direction: column;
-      padding:
-        12px
-        max(var(--page-gutter), var(--safe-right))
-        calc(12px + var(--safe-bottom))
-        max(var(--page-gutter), var(--safe-left));
-    }
-
-    .nav-actions {
-      width: 100%;
-      justify-content: space-between;
+      /* Keep as row — no column stacking */
+      gap: 8px;
     }
 
     .brand {
-      gap: 10px;
+      gap: 8px;
+      min-width: 0;
     }
 
     .logo-group {
-      gap: 7px;
+      gap: 6px;
+      flex-shrink: 1;
     }
 
     .logo {
-      height: 30px;
+      height: 26px;
     }
 
     .logo-taller {
-      max-height: 34px;
+      max-height: 30px;
     }
 
     .student-name {
-      max-width: 46vw;
+      font-size: 0.78rem;
+      max-width: 32vw;
+      white-space: normal;
+    }
+
+    .nav-actions {
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .back-link {
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
+    .page-hero {
+      padding-top: clamp(48px, 10vw, 64px);
+    }
+
+    h1 {
+      font-size: clamp(2rem, 8vw, 3.5rem);
     }
   }
 

@@ -122,46 +122,48 @@ const bibliographyGroups = [
           <span class="student-name">Teresita de la Torre Ortega</span>
         </a>
 
-        <button
-          class="theme-toggle"
-          type="button"
-          aria-label="Activar modo nocturno"
-          aria-pressed="false"
-        >
-          <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="4"></circle>
-            <path d="M12 2v2"></path>
-            <path d="M12 20v2"></path>
-            <path d="M4.93 4.93l1.41 1.41"></path>
-            <path d="M17.66 17.66l1.41 1.41"></path>
-            <path d="M2 12h2"></path>
-            <path d="M20 12h2"></path>
-            <path d="M4.93 19.07l1.41-1.41"></path>
-            <path d="M17.66 6.34l1.41-1.41"></path>
-          </svg>
-          <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M21 14.8A8.4 8.4 0 0 1 9.2 3 7.6 7.6 0 1 0 21 14.8Z"></path>
-          </svg>
-        </button>
-
-        <button
-          class="menu-toggle"
-          type="button"
-          aria-label="Abrir menú de navegación"
-          aria-expanded="false"
-          aria-controls="site-menu"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-
         <div class="nav-menu" id="site-menu">
           <a href="#apuntes">Apuntes</a>
           <a href="#infografias">Infografías</a>
           <a href="#exposicion">Exposición</a>
           <a href="#glosario">Glosario</a>
           <a href="#bibliografia">Bibliografía</a>
+        </div>
+
+        <div class="nav-end">
+          <button
+            class="theme-toggle"
+            type="button"
+            aria-label="Activar modo nocturno"
+            aria-pressed="false"
+          >
+            <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2"></path>
+              <path d="M12 20v2"></path>
+              <path d="M4.93 4.93l1.41 1.41"></path>
+              <path d="M17.66 17.66l1.41 1.41"></path>
+              <path d="M2 12h2"></path>
+              <path d="M20 12h2"></path>
+              <path d="M4.93 19.07l1.41-1.41"></path>
+              <path d="M17.66 6.34l1.41-1.41"></path>
+            </svg>
+            <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 14.8A8.4 8.4 0 0 1 9.2 3 7.6 7.6 0 1 0 21 14.8Z"></path>
+            </svg>
+          </button>
+
+          <button
+            class="menu-toggle"
+            type="button"
+            aria-label="Abrir menú de navegación"
+            aria-expanded="false"
+            aria-controls="site-menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
         </div>
       </nav>
     </header>
@@ -464,15 +466,16 @@ const bibliographyGroups = [
     --bg: #16222e;
     --surface: #1f2e3b;
     --text: #e9eff4;
-    --text-muted: #9db4c2;
-    --accent: #7fb0c4;
-    --border: #33485a;
+    --text-muted: #b0c8d4;
+    --accent: #a8d0e0;
+    --border: #3d5568;
     --shadow-color: rgba(0, 0, 0, 0.45);
     --card-bg: color-mix(in srgb, var(--surface) 88%, transparent);
     --card-bg-strong: var(--surface);
-    --text-soft: color-mix(in srgb, var(--text) 78%, transparent);
-    --text-subtle: color-mix(in srgb, var(--text) 72%, transparent);
-    --hover-border: color-mix(in srgb, var(--accent) 45%, transparent);
+    /* Solid values instead of alpha to guarantee contrast on any surface */
+    --text-soft: #b8c6cf;
+    --text-subtle: #a8b8c2;
+    --hover-border: color-mix(in srgb, var(--accent) 40%, transparent);
     --body-gradient: linear-gradient(
       180deg,
       color-mix(in srgb, var(--border) 42%, transparent),
@@ -547,7 +550,6 @@ const bibliographyGroups = [
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 28px;
     width: min(1180px, 100%);
     min-height: 72px;
@@ -560,8 +562,16 @@ const bibliographyGroups = [
     display: inline-flex;
     align-items: center;
     gap: 18px;
+    flex: 1 1 auto;
     min-width: 0;
     color: var(--ink);
+  }
+
+  .nav-end {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 8px;
   }
 
   .logo-group {
@@ -799,6 +809,7 @@ const bibliographyGroups = [
   h1 span {
     display: block;
     white-space: nowrap;
+    overflow-wrap: anywhere;
   }
 
   .hero-content > p:not(.eyebrow) {
@@ -1118,7 +1129,7 @@ const bibliographyGroups = [
 
   @media (max-width: 1040px) {
     .navbar {
-      gap: 18px;
+      gap: 16px;
     }
 
     .brand {
@@ -1131,6 +1142,10 @@ const bibliographyGroups = [
 
     .student-name {
       font-size: 0.9rem;
+    }
+
+    .nav-end {
+      gap: 6px;
     }
 
     .nav-menu a {
@@ -1148,7 +1163,8 @@ const bibliographyGroups = [
 
   @media (max-width: 860px) {
     .navbar {
-      min-height: 70px;
+      min-height: 64px;
+      gap: 12px;
       padding:
         10px
         max(var(--page-gutter), var(--safe-right))
@@ -1165,7 +1181,8 @@ const bibliographyGroups = [
     }
 
     .menu-toggle {
-      display: block;
+      display: inline-grid;
+      place-items: center;
     }
 
     .nav-menu {
@@ -1184,6 +1201,7 @@ const bibliographyGroups = [
       padding-bottom: calc(10px + var(--safe-bottom));
       background: var(--paper);
       box-shadow: var(--card-shadow);
+      z-index: 10;
     }
 
     .nav-menu.is-open {
@@ -1208,38 +1226,47 @@ const bibliographyGroups = [
       width: 100%;
     }
 
-    .brand {
-      flex: 1 1 auto;
+    .navbar {
       gap: 10px;
     }
 
+    .brand {
+      gap: 8px;
+    }
+
     .logo-group {
-      gap: 7px;
+      gap: 6px;
     }
 
     .logo {
-      height: 30px;
+      height: 28px;
     }
 
     .logo-taller {
-      max-height: 34px;
+      max-height: 32px;
     }
 
     .student-name {
-      max-width: 42vw;
+      font-size: 0.82rem;
+      max-width: 38vw;
       white-space: normal;
     }
 
     .hero {
-      min-height: clamp(620px, 88svh, 700px);
+      min-height: clamp(580px, 88svh, 700px);
     }
 
     .hero-content {
-      padding-bottom: calc(56px + var(--safe-bottom));
+      padding-bottom: calc(52px + var(--safe-bottom));
     }
 
     h1 {
-      font-size: clamp(2.65rem, 13vw, 4.5rem);
+      /* Allow spans to wrap on small screens */
+      font-size: clamp(1.9rem, 9.5vw, 3.4rem);
+    }
+
+    h1 span {
+      white-space: normal;
     }
 
     .hero-actions,
@@ -1251,29 +1278,46 @@ const bibliographyGroups = [
     .primary-action,
     .secondary-action {
       width: 100%;
+      min-height: 50px;
     }
 
     .section {
       padding:
-        clamp(56px, 12vw, 62px)
+        clamp(48px, 10vw, 60px)
         max(var(--page-gutter), var(--safe-right))
-        clamp(56px, 12vw, 62px)
+        clamp(48px, 10vw, 60px)
         max(var(--page-gutter), var(--safe-left));
     }
 
     .note-card,
     .class-card {
-      padding: 18px;
+      padding: 16px;
+    }
+
+    .topic-tabs {
+      gap: 6px;
     }
 
     .accordion-list summary {
       align-items: flex-start;
       flex-direction: column;
+      gap: 4px;
     }
 
     .accordion-list ol {
-      padding-right: 18px;
-      padding-left: 30px;
+      padding-right: 16px;
+      padding-left: 28px;
+    }
+
+    /* Catalog cards: ensure they don't feel cramped */
+    .catalog-grid {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+      gap: 10px;
+    }
+
+    .catalog-card {
+      min-height: 200px;
+      padding: 16px;
     }
   }
 
