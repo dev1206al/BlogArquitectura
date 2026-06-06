@@ -1,0 +1,313 @@
+GLOSARIO
+
+Termino: Acta constitutiva
+Definición: Documento legal que establece la creación, estructura y reglas de una empresa.
+
+Termino: Actividad independiente
+Definición: Ejercicio profesional donde el arquitecto trabaja por cuenta propia.
+
+Termino: Administración
+Definición: Proceso de planificar, organizar, dirigir y controlar recursos para lograr objetivos.
+
+Termino: Administración por objetivos
+Definición: Modelo de gestión basado en metas claras, medibles y compartidas.
+
+Termino: Alcance
+Definición: Límites, objetivos y entregables que tendrá el proyecto.
+
+Termino: Anteproyecto
+Definición: Etapa inicial donde se desarrollan ideas y propuestas generales.
+
+Termino: APO
+Definición: Siglas de Administración por Objetivos.
+
+Termino: Arancel
+Definición: Guía o documento técnico para calcular honorarios profesionales.
+
+Termino: ASINEA
+Definición: Asociación de Instituciones de Enseñanza de la Arquitectura de la República Mexicana.
+
+Termino: Asociación
+Definición: Unión entre arquitectos, despachos o empresas para desarrollar un proyecto.
+
+Termino: Asociación civil
+Definición: Organización sin fines de lucro con objetivos sociales, culturales, educativos o gremiales.
+
+Termino: BESOP
+Definición: Bitácora Electrónica y Seguimiento a Obra Pública.
+
+Termino: BIM
+Definición: Herramienta digital para coordinar información del proyecto y evitar errores.
+
+Termino: Bitácora de obra
+Definición: Documento legal donde se registran avances, instrucciones, cambios e incidencias de una obra.
+
+Termino: CAMSAM
+Definición: Organismo gremial relacionado con el ejercicio profesional de los arquitectos.
+
+Termino: Capital social
+Definición: Aportación económica o material de los socios.
+
+Termino: Cédula profesional
+Definición: Documento que permite ejercer legalmente una profesión.
+
+Termino: Código de ética
+Definición: Conjunto de normas y valores que orientan la práctica profesional.
+
+Termino: Concurso
+Definición: Modalidad donde varios arquitectos presentan propuestas y compiten por un proyecto.
+
+Termino: Constitución de empresa
+Definición: Proceso legal para crear formalmente una empresa.
+
+Termino: Contratación directa
+Definición: Modalidad donde un cliente contrata al arquitecto para una tarea específica.
+
+Termino: Contrato
+Definición: Documento que establece alcances, obligaciones, tiempos y pagos.
+
+Termino: Control de calidad
+Definición: Revisión de materiales, pruebas y procesos para asegurar que la obra cumpla especificaciones.
+
+Termino: Controlar
+Definición: Revisar resultados, detectar errores y realizar ajustes necesarios.
+
+Termino: Costo directo
+Definición: Gasto ligado directamente a la construcción, como materiales, mano de obra y maquinaria.
+
+Termino: Costo indirecto
+Definición: Gasto necesario para operar, pero no asociado a una partida específica.
+
+Termino: Costo paramétrico
+Definición: Estimación rápida del costo por metro cuadrado según tipo de obra.
+
+Termino: Dirección de obra
+Definición: Supervisión del proceso constructivo.
+
+Termino: DRO
+Definición: Director Responsable de Obra; valida que la obra cumpla con reglamentos y seguridad.
+
+Termino: Eficacia
+Definición: Capacidad de cumplir correctamente el objetivo planteado.
+
+Termino: Eficiencia
+Definición: Capacidad de lograr un resultado usando la menor cantidad posible de recursos.
+
+Termino: Empresa
+Definición: Entidad formada por capital, trabajadores y recursos para ofrecer bienes o servicios.
+
+Termino: Empresa constructora
+Definición: Empresa encargada de ejecutar físicamente una obra.
+
+Termino: Empresa de arquitectura
+Definición: Organización dedicada al diseño, planeación, gestión o supervisión de proyectos arquitectónicos.
+
+Termino: Empresa de servicio
+Definición: Empresa que ofrece asesoría o apoyo especializado sin construir directamente.
+
+Termino: EPP
+Definición: Equipo de Protección Personal usado por trabajadores en obra.
+
+Termino: Ética
+Definición: Estudio de lo correcto e incorrecto en el comportamiento humano.
+
+Termino: Ética profesional
+Definición: Conjunto de valores, principios y normas que guían el comportamiento correcto de un profesionista.
+
+Termino: Factibilidad
+Definición: Análisis que determina si un proyecto puede realizarse con los recursos y condiciones disponibles.
+
+Termino: Factibilidad económica
+Definición: Análisis de costos, presupuesto, inversión y rentabilidad.
+
+Termino: Factibilidad normativa
+Definición: Cumplimiento de leyes, reglamentos, uso de suelo y permisos.
+
+Termino: Factibilidad operativa
+Definición: Revisión de tiempos, logística, mano de obra y ejecución.
+
+Termino: Factibilidad técnica
+Definición: Revisión de sistemas, materiales, tecnología y condiciones constructivas.
+
+Termino: Factor de ajuste
+Definición: Valor que modifica el cálculo de honorarios según condiciones del proyecto.
+
+Termino: Flujo de efectivo
+Definición: Movimiento de entradas y salidas de dinero en una empresa.
+
+Termino: Género de edificación
+Definición: Clasificación de un edificio según su uso y complejidad.
+
+Termino: Gremio
+Definición: Grupo de profesionistas que pertenecen a una misma disciplina u oficio.
+
+Termino: Honorarios
+Definición: Pago que recibe el arquitecto por sus servicios.
+
+Termino: Honorarios mixtos
+Definición: Combinación de pago fijo y porcentaje.
+
+Termino: Imprevistos
+Definición: Porcentaje agregado para cubrir cambios, errores o situaciones no planeadas.
+
+Termino: Incubación
+Definición: Etapa donde el negocio se pone en marcha con asesoría y formación.
+
+Termino: Incubadora de negocios
+Definición: Organización que asesora a emprendedores para crear y consolidar una empresa.
+
+Termino: Independencia de criterio
+Definición: Capacidad de tomar decisiones profesionales con juicio propio.
+
+Termino: INDAUTOR
+Definición: Institución encargada del registro de derechos de autor en México.
+
+Termino: Índice de costo
+Definición: Indicador que permite ajustar o controlar costos durante el proyecto.
+
+Termino: Licitación
+Definición: Proceso de selección donde se evalúan propuesta, presupuesto, tiempos y condiciones técnicas.
+
+Termino: Liderazgo
+Definición: Capacidad de guiar, coordinar y motivar a un equipo.
+
+Termino: Marco legal
+Definición: Conjunto de normas que permiten operar formalmente y prevenir conflictos.
+
+Termino: Meta
+Definición: Resultado que se busca alcanzar.
+
+Termino: Mitigación
+Definición: Acciones para reducir el impacto de un riesgo.
+
+Termino: Modelo de negocio
+Definición: Forma en que una empresa ofrece valor, obtiene clientes y genera ingresos.
+
+Termino: Moral
+Definición: Conjunto de normas y reglas que orientan la conducta de las personas.
+
+Termino: Nota de bitácora
+Definición: Registro escrito de una instrucción, solicitud, autorización o hecho relevante en obra.
+
+Termino: Objeto social
+Definición: Actividad principal que realizará una empresa.
+
+Termino: Organizar
+Definición: Distribuir recursos, tareas y responsabilidades dentro de un equipo o proyecto.
+
+Termino: Personalidad jurídica
+Definición: Capacidad legal de una empresa para tener derechos y obligaciones.
+
+Termino: Planificar
+Definición: Definir metas, estrategias, tiempos y acciones antes de realizar un proyecto.
+
+Termino: Porcentaje de obra
+Definición: Cobro calculado como porcentaje del costo total de construcción.
+
+Termino: Post-incubación
+Definición: Etapa de seguimiento y mejora después de iniciar operaciones.
+
+Termino: Pre-incubación
+Definición: Etapa inicial donde se analiza la idea y se crea el plan de negocios.
+
+Termino: Precio alzado
+Definición: Monto fijo acordado por un servicio o proyecto completo.
+
+Termino: Precio unitario
+Definición: Costo por unidad de trabajo, material, equipo o actividad.
+
+Termino: Precios unitarios
+Definición: Sistema de presupuesto basado en el costo por unidad de trabajo ejecutado.
+
+Termino: Presupuesto arquitectónico
+Definición: Documento técnico-económico que estima el costo de una obra.
+
+Termino: Principios
+Definición: Fundamentos generales que guían la forma de actuar.
+
+Termino: Propiedad intelectual
+Definición: Protección legal sobre creaciones, diseños, planos, renders o proyectos.
+
+Termino: Proyecto ejecutivo
+Definición: Conjunto de planos y documentos técnicos necesarios para construir.
+
+Termino: Razón social
+Definición: Nombre legal con el que se identifica una empresa.
+
+Termino: Recursos
+Definición: Elementos disponibles para planear, ejecutar y completar un proyecto.
+
+Termino: Recursos económicos
+Definición: Dinero o medios financieros disponibles para realizar un proyecto.
+
+Termino: Recursos humanos
+Definición: Personas que aportan trabajo, habilidades y conocimientos.
+
+Termino: Recursos materiales
+Definición: Bienes físicos o tangibles utilizados en un proyecto.
+
+Termino: Recursos tecnológicos
+Definición: Herramientas, sistemas y conocimientos técnicos que mejoran el trabajo.
+
+Termino: Relaciones humanas
+Definición: Interacción entre personas dentro de un equipo, empresa u organización.
+
+Termino: Residente de obra
+Definición: Profesional encargado de dirigir la construcción en sitio.
+
+Termino: Responsabilidad civil
+Definición: Obligación de responder por daños, errores o fallas profesionales.
+
+Termino: Responsabilidad profesional
+Definición: Obligación de actuar correctamente dentro del trabajo, cumpliendo normas y deberes.
+
+Termino: Responsabilidad social
+Definición: Compromiso de considerar el impacto que una decisión profesional tiene en la sociedad.
+
+Termino: Riesgo
+Definición: Evento incierto que puede afectar positiva o negativamente un proyecto.
+
+Termino: Sector privado
+Definición: Ámbito donde el cliente es una persona, empresa o inversionista.
+
+Termino: Sector público
+Definición: Ámbito donde el cliente es el Estado y los proyectos buscan beneficio colectivo.
+
+Termino: Sociedad civil
+Definición: Figura usada comúnmente para prestar servicios profesionales.
+
+Termino: Sociedad mercantil
+Definición: Entidad creada para realizar actividades comerciales y obtener ganancias.
+
+Termino: Supervisor de obra
+Definición: Persona que revisa avances, calidad, costos y cumplimiento del proyecto.
+
+Termino: TIR
+Definición: Tasa Interna de Retorno; porcentaje que indica la rentabilidad estimada de una inversión.
+
+Termino: Transparencia
+Definición: Actuar con claridad, honestidad y sin ocultar información importante.
+
+Termino: Triángulo de gestión
+Definición: Relación entre costo, tiempo y calidad dentro de un proyecto.
+
+Termino: Valores
+Definición: Creencias que influyen en las decisiones personales y profesionales.
+
+Termino: Valor probatorio
+Definición: Capacidad de un documento para servir como evidencia legal.
+
+Termino: Viabilidad
+Definición: Posibilidad de que el proyecto sea sostenible, rentable o conveniente a largo plazo.
+
+Termino: Vicios ocultos
+Definición: Defectos que aparecen después de entregar una obra y que no eran visibles al inicio.
+
+Termino: Vicios o fallas técnicas
+Definición: Problemas constructivos que pueden afectar la calidad o seguridad de la obra.
+
+Termino: VPN
+Definición: Valor Presente Neto; indicador financiero que muestra si un proyecto genera valor económico.
+
+Termino: PRI
+Definición: Periodo de Recuperación de la Inversión; tiempo necesario para recuperar la inversión inicial.

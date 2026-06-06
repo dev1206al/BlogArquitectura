@@ -1,0 +1,590 @@
+---
+type CarouselItem = {
+  src: string;
+  alt: string;
+  title?: string;
+  eyebrow?: string;
+};
+
+type Props = {
+  id: string;
+  items: CarouselItem[];
+  variant?: "portrait" | "slide" | "center";
+};
+
+const { id, items, variant = "portrait" } = Astro.props;
+const firstItem = items[0];
+const isCenter = variant === "center";
+---
+
+{
+  isCenter ? (
+    <section
+      class="carousel carousel-center"
+      data-carousel
+      data-carousel-mode="center"
+      data-carousel-id={id}
+      tabindex="0"
+      aria-label={`Carrusel ${id}`}
+    >
+      <div class="center-track" data-center-track>
+        {items.map((item, index) => (
+          <article
+            class:list={["center-slide", { "is-center": index === 0 }]}
+            data-center-slide
+            data-eyebrow={item.eyebrow}
+            data-title={item.title}
+          >
+            <img
+              src={item.src}
+              alt={item.alt}
+              width="1536"
+              height="2752"
+              loading="lazy"
+              decoding="async"
+            />
+          </article>
+        ))}
+      </div>
+
+      <div class="carousel-meta center-meta">
+        <div>
+          <span data-carousel-eyebrow>{firstItem.eyebrow}</span>
+          <h3 data-carousel-title>{firstItem.title}</h3>
+        </div>
+        <div class="carousel-controls" aria-label={`Controles del carrusel ${id}`}>
+          <button type="button" data-carousel-prev aria-label="Elemento anterior">Anterior</button>
+          <span data-carousel-status>1 / {items.length}</span>
+          <button type="button" data-carousel-next aria-label="Elemento siguiente">Siguiente</button>
+        </div>
+      </div>
+
+      <div class="carousel-dots" aria-label="Indicador de posición">
+        {items.map((_, index) => (
+          <button
+            type="button"
+            class:list={{ "is-active": index === 0 }}
+            data-carousel-dot={index}
+            aria-label={`Ir a la lámina ${index + 1}`}
+          />
+        ))}
+      </div>
+
+      <div class="lightbox" data-lightbox hidden>
+        <button type="button" data-lightbox-close aria-label="Cerrar imagen ampliada">Cerrar</button>
+        <img src={firstItem.src} alt={firstItem.alt} data-lightbox-image decoding="async" />
+      </div>
+    </section>
+  ) : (
+    <section
+      class:list={["carousel", `carousel-${variant}`]}
+      data-carousel
+      data-carousel-mode="basic"
+      data-items={JSON.stringify(items)}
+      data-carousel-id={id}
+    >
+      <div class="carousel-frame">
+        <img src={firstItem.src} alt={firstItem.alt} data-carousel-image loading="lazy" decoding="async" />
+      </div>
+      <div class="carousel-meta">
+        <div>
+          <span data-carousel-eyebrow>{firstItem.eyebrow}</span>
+          <h3 data-carousel-title>{firstItem.title}</h3>
+        </div>
+        <div class="carousel-controls" aria-label={`Controles del carrusel ${id}`}>
+          <button type="button" data-carousel-prev aria-label="Elemento anterior">Anterior</button>
+          <span data-carousel-status>1 / {items.length}</span>
+          <button type="button" data-carousel-next aria-label="Elemento siguiente">Siguiente</button>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  const initializeBasicCarousel = (root) => {
+    const items = JSON.parse(root.dataset.items || "[]");
+    const image = root.querySelector("[data-carousel-image]");
+    const eyebrow = root.querySelector("[data-carousel-eyebrow]");
+    const title = root.querySelector("[data-carousel-title]");
+    const status = root.querySelector("[data-carousel-status]");
+    const prev = root.querySelector("[data-carousel-prev]");
+    const next = root.querySelector("[data-carousel-next]");
+    let index = 0;
+
+    const render = () => {
+      const item = items[index];
+      image.src = item.src;
+      image.alt = item.alt;
+      eyebrow.textContent = item.eyebrow || "";
+      title.textContent = item.title || "";
+      status.textContent = `${index + 1} / ${items.length}`;
+      prev.disabled = index === 0;
+      next.disabled = index === items.length - 1;
+    };
+
+    prev.addEventListener("click", () => {
+      if (index > 0) {
+        index -= 1;
+        render();
+      }
+    });
+
+    next.addEventListener("click", () => {
+      if (index < items.length - 1) {
+        index += 1;
+        render();
+      }
+    });
+
+    render();
+  };
+
+  const initializeCenterCarousel = (root) => {
+    const track = root.querySelector("[data-center-track]");
+    const slides = Array.from(root.querySelectorAll("[data-center-slide]"));
+    const eyebrow = root.querySelector("[data-carousel-eyebrow]");
+    const title = root.querySelector("[data-carousel-title]");
+    const status = root.querySelector("[data-carousel-status]");
+    const prev = root.querySelector("[data-carousel-prev]");
+    const next = root.querySelector("[data-carousel-next]");
+    const dots = Array.from(root.querySelectorAll("[data-carousel-dot]"));
+    const lightbox = root.querySelector("[data-lightbox]");
+    const lightboxImage = root.querySelector("[data-lightbox-image]");
+    const lightboxClose = root.querySelector("[data-lightbox-close]");
+    let centerIndex = 0;
+
+    const scrollToSlide = (index) => {
+      slides[index]?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    };
+
+    const setCenter = (index) => {
+      centerIndex = Math.max(0, Math.min(index, slides.length - 1));
+
+      slides.forEach((slide, slideIndex) => {
+        slide.classList.toggle("is-center", slideIndex === centerIndex);
+      });
+
+      dots.forEach((dot, dotIndex) => {
+        dot.classList.toggle("is-active", dotIndex === centerIndex);
+      });
+
+      const centerSlide = slides[centerIndex];
+      const image = centerSlide.querySelector("img");
+      const slideEyebrow = centerSlide.dataset.eyebrow || "";
+      const slideTitle = centerSlide.dataset.title || "";
+
+      eyebrow.textContent = slideEyebrow;
+      title.textContent = slideTitle;
+      status.textContent = `${centerIndex + 1} / ${slides.length}`;
+      prev.disabled = centerIndex === 0;
+      next.disabled = centerIndex === slides.length - 1;
+
+      lightboxImage.src = image.src;
+      lightboxImage.alt = image.alt;
+    };
+
+    const updateClosestCenter = () => {
+      const trackRect = track.getBoundingClientRect();
+      const trackCenter = trackRect.left + trackRect.width / 2;
+      let closestIndex = centerIndex;
+      let closestDistance = Number.POSITIVE_INFINITY;
+
+      slides.forEach((slide, index) => {
+        const rect = slide.getBoundingClientRect();
+        const slideCenter = rect.left + rect.width / 2;
+        const distance = Math.abs(trackCenter - slideCenter);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+
+      setCenter(closestIndex);
+    };
+
+    let scrollTimer;
+    const scheduleCenterUpdate = () => {
+      window.clearTimeout(scrollTimer);
+      scrollTimer = window.setTimeout(updateClosestCenter, 80);
+    };
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        () => {
+          updateClosestCenter();
+        },
+        {
+          root: track,
+          threshold: [0.65, 0.8, 0.95],
+        },
+      );
+
+      slides.forEach((slide) => observer.observe(slide));
+    }
+
+    track.addEventListener("scroll", scheduleCenterUpdate, { passive: true });
+
+    prev.addEventListener("click", () => {
+      scrollToSlide(centerIndex - 1);
+    });
+
+    next.addEventListener("click", () => {
+      scrollToSlide(centerIndex + 1);
+    });
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener("click", () => scrollToSlide(index));
+    });
+
+    slides.forEach((slide, index) => {
+      slide.addEventListener("click", () => {
+        if (index === centerIndex) {
+          lightbox.hidden = false;
+          document.body.classList.add("has-lightbox");
+          lightboxClose.focus();
+        } else {
+          scrollToSlide(index);
+        }
+      });
+    });
+
+    root.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        scrollToSlide(centerIndex - 1);
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        scrollToSlide(centerIndex + 1);
+      }
+    });
+
+    const closeLightbox = () => {
+      lightbox.hidden = true;
+      document.body.classList.remove("has-lightbox");
+      root.focus();
+    };
+
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    lightboxClose.addEventListener("click", closeLightbox);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !lightbox.hidden) {
+        closeLightbox();
+      }
+    });
+
+    setCenter(0);
+    requestAnimationFrame(() => scrollToSlide(0));
+  };
+
+  document.querySelectorAll("[data-carousel]").forEach((root) => {
+    if (root.dataset.ready === "true") return;
+    root.dataset.ready = "true";
+
+    if (root.dataset.carouselMode === "center") {
+      initializeCenterCarousel(root);
+    } else {
+      initializeBasicCarousel(root);
+    }
+  });
+</script>
+
+<style>
+  .carousel {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--white);
+    box-shadow: var(--shadow);
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      color 180ms ease;
+  }
+
+  .carousel:focus-visible {
+    outline: 3px solid var(--steel);
+    outline-offset: 4px;
+  }
+
+  .carousel-frame {
+    display: grid;
+    place-items: center;
+    background: var(--paper);
+  }
+
+  .carousel-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 760px;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .carousel-portrait .carousel-frame img {
+    aspect-ratio: 1536 / 2752;
+  }
+
+  .carousel-slide .carousel-frame img {
+    aspect-ratio: 16 / 9;
+  }
+
+  .carousel-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    border-top: 1px solid var(--line);
+    padding: 16px;
+  }
+
+  .carousel-meta span {
+    color: var(--steel);
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .carousel-meta h3 {
+    margin: 6px 0 0;
+    color: var(--ink);
+    font-size: 1.08rem;
+    line-height: 1.25;
+  }
+
+  .carousel-controls {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .carousel-controls button {
+    min-height: 44px;
+    border: 1px solid var(--sky);
+    border-radius: 8px;
+    padding: 0 12px;
+    background: var(--white);
+    color: var(--ink);
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .carousel-controls button:hover:not(:disabled) {
+    background: var(--sky);
+    color: var(--steel);
+  }
+
+  .carousel-controls button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
+  .carousel-controls > span {
+    min-width: 58px;
+    text-align: center;
+  }
+
+  .carousel-center {
+    --center-image-height: clamp(360px, 70vh, 760px);
+    --center-image-width: calc(var(--center-image-height) * 1536 / 2752);
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .center-track {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-padding-inline: max(24px, calc((100% - var(--center-image-width)) / 2));
+    scroll-snap-type: x mandatory;
+    padding: 18px max(24px, calc((100% - var(--center-image-width)) / 2)) 28px;
+    scrollbar-width: none;
+  }
+
+  .center-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .center-slide {
+    flex: 0 0 auto;
+    width: fit-content;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    opacity: 0.55;
+    scroll-snap-align: center;
+    transform: scale(0.82);
+    transform-origin: center;
+    transition:
+      opacity 220ms ease,
+      transform 220ms ease;
+  }
+
+  .center-slide.is-center {
+    cursor: zoom-in;
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .center-slide img {
+    display: block;
+    width: auto;
+    height: var(--center-image-height);
+    aspect-ratio: 1536 / 2752;
+    border-radius: 8px;
+    object-fit: contain;
+    object-position: center;
+    background: var(--paper);
+    box-shadow: 0 14px 34px var(--shadow-color);
+  }
+
+  .center-slide.is-center img {
+    box-shadow: var(--shadow);
+  }
+
+  .center-meta {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--white);
+  }
+
+  .carousel-dots {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+    padding: 12px 0 0;
+  }
+
+  .carousel-dots button {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .carousel-dots button::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--sky);
+    content: "";
+    transform: translate(-50%, -50%);
+  }
+
+  .carousel-dots button.is-active::before {
+    background: var(--steel);
+  }
+
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding:
+      max(28px, env(safe-area-inset-top, 0px))
+      max(28px, env(safe-area-inset-right, 0px))
+      max(28px, env(safe-area-inset-bottom, 0px))
+      max(28px, env(safe-area-inset-left, 0px));
+    background: color-mix(in srgb, var(--ink) 88%, transparent);
+  }
+
+  .lightbox[hidden] {
+    display: none;
+  }
+
+  .lightbox img {
+    max-width: min(96vw, 1400px);
+    max-height: 92vh;
+    border-radius: 8px;
+    object-fit: contain;
+    background: var(--white);
+    box-shadow: 0 30px 80px var(--shadow-color);
+  }
+
+  .lightbox button {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    min-width: 44px;
+    min-height: 44px;
+    border: 1px solid var(--sky);
+    border-radius: 8px;
+    padding: 0 14px;
+    background: var(--white);
+    color: var(--ink);
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  :global(body.has-lightbox) {
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .center-track {
+      scroll-behavior: auto;
+    }
+
+    .center-slide,
+    .center-slide.is-center {
+      transition: none;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .carousel-center {
+      --center-image-height: min(70svh, calc(82vw * 1.7917));
+      --center-image-width: calc(var(--center-image-height) * 1536 / 2752);
+    }
+
+    .carousel-meta {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .carousel-controls {
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .carousel-controls button {
+      flex: 1 1 0;
+    }
+
+    .center-track {
+      gap: 12px;
+    }
+  }
+</style>

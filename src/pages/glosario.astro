@@ -1,0 +1,450 @@
+---
+import { parseGlossary, readPublicText } from "../lib/content";
+
+const glossary = parseGlossary(readPublicText("Glosario.txt"));
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>
+      (() => {
+        try {
+          const savedTheme = localStorage.getItem("theme");
+          const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+          document.documentElement.dataset.theme = savedTheme || systemTheme;
+        } catch {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content="Glosario completo de Administración en Arquitectura I." />
+    <title>Glosario | Teresita de la Torre Ortega</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="navbar" aria-label="Navegación principal">
+        <a class="brand" href="/" aria-label="Volver al inicio">
+          <span class="logo-group" aria-hidden="true">
+            <span class="logo-slot">
+              <img class="logo logo-unam theme-logo theme-logo-light" src="/assets/escudo-unam-navy.svg" alt="" loading="eager" />
+              <img class="logo logo-unam theme-logo theme-logo-dark" src="/assets/escudo-unam-light.svg" alt="" loading="eager" />
+            </span>
+            <span class="logo-slot">
+              <img class="logo logo-fa theme-logo theme-logo-light" src="/assets/logoFA-navy.png" alt="" loading="eager" />
+              <img class="logo logo-fa theme-logo theme-logo-dark" src="/assets/logoFA-light.png" alt="" loading="eager" />
+            </span>
+            <span class="logo-slot">
+              <img class="logo logo-taller theme-logo theme-logo-light" src="/assets/logoTaller-navy.png" alt="" loading="eager" />
+              <img class="logo logo-taller theme-logo theme-logo-dark" src="/assets/logoTaller-light.png" alt="" loading="eager" />
+            </span>
+          </span>
+          <span class="student-name">Teresita de la Torre Ortega</span>
+        </a>
+        <div class="nav-actions">
+          <button
+            class="theme-toggle"
+            type="button"
+            aria-label="Activar modo nocturno"
+            aria-pressed="false"
+          >
+            <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2"></path>
+              <path d="M12 20v2"></path>
+              <path d="M4.93 4.93l1.41 1.41"></path>
+              <path d="M17.66 17.66l1.41 1.41"></path>
+              <path d="M2 12h2"></path>
+              <path d="M20 12h2"></path>
+              <path d="M4.93 19.07l1.41-1.41"></path>
+              <path d="M17.66 6.34l1.41-1.41"></path>
+            </svg>
+            <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 14.8A8.4 8.4 0 0 1 9.2 3 7.6 7.6 0 1 0 21 14.8Z"></path>
+            </svg>
+          </button>
+          <a class="back-link" href="/#glosario">Volver al sitio</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="page-hero">
+        <p class="eyebrow">Glosario completo</p>
+        <h1>Conceptos de Administración en Arquitectura I</h1>
+        <p>{glossary.length} términos disponibles para consulta.</p>
+      </section>
+
+      <section class="glossary-grid" aria-label="Términos del glosario">
+        {
+          glossary.map((item) => (
+            <article class="glossary-item">
+              <h2>{item.term}</h2>
+              <p>{item.definition}</p>
+            </article>
+          ))
+        }
+      </section>
+    </main>
+    <script>
+      const themeToggle = document.querySelector(".theme-toggle");
+
+      const applyTheme = (theme) => {
+        const nextTheme = theme === "dark" ? "dark" : "light";
+        document.documentElement.dataset.theme = nextTheme;
+        themeToggle?.setAttribute("aria-pressed", String(nextTheme === "dark"));
+        themeToggle?.setAttribute(
+          "aria-label",
+          nextTheme === "dark" ? "Activar modo claro" : "Activar modo nocturno",
+        );
+      };
+
+      applyTheme(document.documentElement.dataset.theme);
+
+      themeToggle?.addEventListener("click", () => {
+        const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        applyTheme(nextTheme);
+        try {
+          localStorage.setItem("theme", nextTheme);
+        } catch {
+          // Local storage can be unavailable in private browsing contexts.
+        }
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  :root {
+    --bg: #f5efeb;
+    --surface: #ffffff;
+    --text: #2f4156;
+    --text-muted: #567c8d;
+    --accent: #567c8d;
+    --border: #c8d9e6;
+    --shadow-color: rgba(47, 65, 86, 0.12);
+    --ink: var(--text);
+    --steel: var(--accent);
+    --sky: var(--border);
+    --paper: var(--bg);
+    --white: var(--surface);
+    --line: color-mix(in srgb, var(--border) 70%, transparent);
+    --card-bg: var(--surface);
+    --card-shadow: 0 16px 40px var(--shadow-color);
+    --text-soft: color-mix(in srgb, var(--text) 76%, transparent);
+    --text-subtle: color-mix(in srgb, var(--text) 72%, transparent);
+    --page-gutter: clamp(16px, 4vw, 32px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    color: var(--ink);
+    font-family:
+      Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
+    background: var(--paper);
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #16222e;
+    --surface: #1f2e3b;
+    --text: #e9eff4;
+    --text-muted: #9db4c2;
+    --accent: #7fb0c4;
+    --border: #33485a;
+    --shadow-color: rgba(0, 0, 0, 0.45);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    overflow-x: hidden;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    overflow-x: hidden;
+    background: var(--paper);
+    transition:
+      background-color 180ms ease,
+      color 180ms ease;
+  }
+
+  img,
+  svg {
+    max-width: 100%;
+  }
+
+  img {
+    height: auto;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    border-bottom: 1px solid var(--sky);
+    background: var(--paper);
+  }
+
+  .site-header,
+  .glossary-item,
+  .theme-toggle,
+  .back-link {
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      color 180ms ease;
+  }
+
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    width: min(1180px, 100%);
+    min-height: 72px;
+    margin: 0 auto;
+    padding-right: max(var(--page-gutter), var(--safe-right));
+    padding-left: max(var(--page-gutter), var(--safe-left));
+  }
+
+  .brand,
+  .logo-group {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .brand {
+    gap: 18px;
+  }
+
+  .logo-group {
+    gap: 12px;
+  }
+
+  .logo-slot {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+  }
+
+  .logo-slot .theme-logo {
+    grid-area: 1 / 1;
+  }
+
+  .theme-logo-dark,
+  :root[data-theme="dark"] .theme-logo-light {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  :root[data-theme="dark"] .theme-logo-dark {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .logo {
+    display: block;
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .logo-taller {
+    max-height: 48px;
+  }
+
+  .student-name,
+  .back-link {
+    color: var(--ink);
+    font-weight: 800;
+  }
+
+  .nav-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .theme-toggle {
+    position: relative;
+    display: inline-grid;
+    flex: 0 0 auto;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--sky);
+    border-radius: 8px;
+    padding: 0;
+    background: var(--white);
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .theme-toggle:hover,
+  .theme-toggle:focus-visible {
+    background: var(--sky);
+    color: var(--steel);
+  }
+
+  .theme-icon {
+    grid-area: 1 / 1;
+    width: 21px;
+    height: 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease;
+  }
+
+  .theme-icon-moon,
+  :root[data-theme="dark"] .theme-icon-sun {
+    opacity: 0;
+    transform: scale(0.72) rotate(-20deg);
+  }
+
+  :root[data-theme="dark"] .theme-icon-moon {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    border-bottom: 2px solid var(--steel);
+  }
+
+  .page-hero,
+  .glossary-grid {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    padding-right: max(var(--page-gutter), var(--safe-right));
+    padding-left: max(var(--page-gutter), var(--safe-left));
+  }
+
+  .page-hero {
+    padding-top: clamp(64px, 9vw, 86px);
+    padding-bottom: 42px;
+  }
+
+  .eyebrow {
+    margin: 0 0 12px;
+    color: var(--steel);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    max-width: 840px;
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    line-height: 0.98;
+    letter-spacing: 0;
+  }
+
+  .page-hero p:not(.eyebrow) {
+    color: var(--text-soft);
+    line-height: 1.7;
+  }
+
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: 14px;
+    padding-bottom: calc(clamp(64px, 9vw, 86px) + var(--safe-bottom));
+  }
+
+  .glossary-item {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 22px;
+    background: var(--card-bg);
+    box-shadow: var(--card-shadow);
+  }
+
+  .glossary-item h2 {
+    margin: 0 0 10px;
+    color: var(--ink);
+    font-size: 1.15rem;
+  }
+
+  .glossary-item p {
+    margin: 0;
+    color: var(--text-subtle);
+    line-height: 1.65;
+  }
+
+  @media (max-width: 640px) {
+    .navbar,
+    .page-hero,
+    .glossary-grid {
+      width: 100%;
+    }
+
+    .navbar {
+      align-items: flex-start;
+      flex-direction: column;
+      padding:
+        12px
+        max(var(--page-gutter), var(--safe-right))
+        calc(12px + var(--safe-bottom))
+        max(var(--page-gutter), var(--safe-left));
+    }
+
+    .nav-actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .brand {
+      gap: 10px;
+    }
+
+    .logo-group {
+      gap: 7px;
+    }
+
+    .logo {
+      height: 30px;
+    }
+
+    .logo-taller {
+      max-height: 34px;
+    }
+
+    .student-name {
+      max-width: 46vw;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      transition: none !important;
+    }
+  }
+</style>

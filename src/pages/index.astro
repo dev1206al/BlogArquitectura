@@ -1,0 +1,1288 @@
+---
+import PdfViewer from "../components/PdfViewer.astro";
+import Carousel from "../components/Carousel.astro";
+import { expositionSlides } from "../data/exposicion";
+import { temas } from "../data/temas";
+import {
+  groupReferences,
+  parseGlossary,
+  parseReferences,
+  readPublicText,
+} from "../lib/content";
+
+const glossary = parseGlossary(readPublicText("Glosario.txt"));
+const highlightedGlossary = glossary.slice(0, 4);
+const bibliography = groupReferences(parseReferences(readPublicText("Referencias_APA.txt")));
+const firstTema = temas[0];
+const infographicItems = temas
+  .filter((tema) => tema.infografia)
+  .map((tema) => ({
+    src: tema.infografia ?? "",
+    alt: `Infografía de ${tema.tema} : ${tema.titulo}`,
+    title: tema.titulo,
+    eyebrow: tema.tema,
+  }));
+
+const sections = [
+  {
+    title: "Apuntes",
+    href: "#apuntes",
+    kicker: "Clase por clase",
+    description:
+      "Notas, comentarios y PDFs por tema con un visor integrado dentro de la página.",
+  },
+  {
+    title: "Infografías",
+    href: "#infografias",
+    kicker: "Síntesis visual",
+    description:
+      "Láminas por clase para revisar procesos, conceptos, instituciones y herramientas del curso.",
+  },
+  {
+    title: "Exposición",
+    href: "#exposicion",
+    kicker: "Proyecto oral",
+    description:
+      "Documento base y presentación sobre introducción a los proyectos de inversión.",
+  },
+  {
+    title: "Glosario",
+    href: "#glosario",
+    kicker: "Términos esenciales",
+    description:
+      "Conceptos destacados con acceso a una página completa de consulta.",
+  },
+  {
+    title: "Bibliografía",
+    href: "#bibliografia",
+    kicker: "Fuentes APA",
+    description:
+      "Referencias agrupadas por libros, artículos, normas y sitios consultados.",
+  },
+];
+
+const expositionPdf = {
+  title: "Introducción a los proyectos de inversión",
+  type: "Presentación",
+  href: "/exposicion/Expo-introduccion-a-los-proyectos-de-inversion.pdf",
+};
+
+const bibliographyGroups = [
+  { title: "Libros", items: bibliography.libros },
+  { title: "Artículos", items: bibliography.articulos },
+  { title: "Normas", items: bibliography.normas },
+  { title: "Sitios", items: bibliography.sitios },
+];
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>
+      (() => {
+        try {
+          const savedTheme = localStorage.getItem("theme");
+          const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+          document.documentElement.dataset.theme = savedTheme || systemTheme;
+        } catch {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="generator" content={Astro.generator} />
+    <meta
+      name="description"
+      content="Blog académico de arquitectura de Teresita de la Torre Ortega para Administración en Arquitectura I."
+    />
+    <title>Teresita de la Torre Ortega | Blog académico de arquitectura</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="navbar" aria-label="Navegación principal">
+        <a class="brand" href="#inicio" aria-label="Inicio del sitio académico">
+          <span class="logo-group" aria-hidden="true">
+            <span class="logo-slot logo-slot-unam">
+              <img class="logo logo-unam theme-logo theme-logo-light" src="/assets/escudo-unam-navy.svg" alt="" loading="eager" />
+              <img class="logo logo-unam theme-logo theme-logo-dark" src="/assets/escudo-unam-light.svg" alt="" loading="eager" />
+            </span>
+            <span class="logo-slot">
+              <img class="logo logo-fa theme-logo theme-logo-light" src="/assets/logoFA-navy.png" alt="" loading="eager" />
+              <img class="logo logo-fa theme-logo theme-logo-dark" src="/assets/logoFA-light.png" alt="" loading="eager" />
+            </span>
+            <span class="logo-slot">
+              <img class="logo logo-taller theme-logo theme-logo-light" src="/assets/logoTaller-navy.png" alt="" loading="eager" />
+              <img class="logo logo-taller theme-logo theme-logo-dark" src="/assets/logoTaller-light.png" alt="" loading="eager" />
+            </span>
+          </span>
+          <span class="student-name">Teresita de la Torre Ortega</span>
+        </a>
+
+        <button
+          class="theme-toggle"
+          type="button"
+          aria-label="Activar modo nocturno"
+          aria-pressed="false"
+        >
+          <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="M4.93 4.93l1.41 1.41"></path>
+            <path d="M17.66 17.66l1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="M4.93 19.07l1.41-1.41"></path>
+            <path d="M17.66 6.34l1.41-1.41"></path>
+          </svg>
+          <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 14.8A8.4 8.4 0 0 1 9.2 3 7.6 7.6 0 1 0 21 14.8Z"></path>
+          </svg>
+        </button>
+
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-label="Abrir menú de navegación"
+          aria-expanded="false"
+          aria-controls="site-menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="nav-menu" id="site-menu">
+          <a href="#apuntes">Apuntes</a>
+          <a href="#infografias">Infografías</a>
+          <a href="#exposicion">Exposición</a>
+          <a href="#glosario">Glosario</a>
+          <a href="#bibliografia">Bibliografía</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="inicio">
+      <section class="hero" aria-labelledby="page-title">
+        <img src="/assets/hero-arquitectura.png" alt="Mesa de trabajo arquitectónica con modelos y planos" />
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <p class="eyebrow">Facultad de Arquitectura</p>
+          <h1 id="page-title">
+            <span>Administración en</span>
+            <span>Arquitectura I</span>
+          </h1>
+          <p>
+            Archivo académico de apuntes, infografías, exposición, glosario y
+            bibliografía del curso.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-action" href="#catalogo">Explorar catálogo</a>
+            <a class="secondary-action" href="#apuntes">Ver apuntes</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section intro" id="catalogo" aria-labelledby="catalogo-title">
+        <div class="section-heading">
+          <p class="eyebrow">Dashboard general</p>
+          <h2 id="catalogo-title">Un espacio para ordenar el aprendizaje</h2>
+          <p>
+            El contenido se organiza por materiales de clase y recursos de
+            consulta para navegar el curso sin perder el contexto académico.
+          </p>
+        </div>
+
+        <div class="catalog-grid">
+          {
+            sections.map((section) => (
+              <a class="catalog-card" href={section.href}>
+                <span>{section.kicker}</span>
+                <h3>{section.title}</h3>
+                <p>{section.description}</p>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="section notes-section" id="apuntes" aria-labelledby="apuntes-title">
+        <div class="section-heading">
+          <p class="eyebrow">Apuntes</p>
+          <h2 id="apuntes-title">Notas por clase</h2>
+          <p>
+            Selecciona un tema para revisar el comentario de clase y el apunte
+            correspondiente.
+          </p>
+        </div>
+
+        <div class="topic-tabs" role="list" aria-label="Selector de temas">
+          {
+            temas.map((tema, index) => (
+              <button
+                class:list={["topic-button", { "is-active": index === 0 }]}
+                type="button"
+                data-topic-id={tema.id}
+              >
+                {tema.tema}
+              </button>
+            ))
+          }
+        </div>
+
+        <div class="notes-layout">
+          <article class="note-card">
+            <span id="selected-tema">{firstTema.tema}</span>
+            <h3 id="selected-title">{firstTema.titulo}</h3>
+            <p id="selected-comments">{firstTema.comentarios}</p>
+          </article>
+
+          <div class="viewer-card">
+            <PdfViewer id="apuntes-viewer" src={firstTema.pdf} title={firstTema.titulo} />
+          </div>
+        </div>
+      </section>
+
+      <section class="section centered-section" id="infografias" aria-labelledby="infografias-title">
+        <div class="section-heading compact centered-heading">
+          <p class="eyebrow">Infografías</p>
+          <h2 id="infografias-title">Láminas por tema</h2>
+        </div>
+        <Carousel id="infografias-carousel" items={infographicItems} variant="center" />
+      </section>
+
+      <section class="section exposition" id="exposicion" aria-labelledby="exposicion-title">
+        <div>
+          <p class="eyebrow">Exposición</p>
+          <h2 id="exposicion-title">Introducción a los proyectos de inversión</h2>
+          <p>
+            Material de exposición integrado dentro del sitio mediante PDF.js:
+            documento base y presentación.
+          </p>
+        </div>
+      </section>
+
+      <section class="section exposition-files" aria-label="Archivos de exposición">
+        <article class="class-card exposition-carousel-card">
+          <div class="class-header">
+            <span>Presentación</span>
+            <h3>Introducción a los proyectos de inversión</h3>
+          </div>
+          <Carousel id="exposicion-carousel" items={expositionSlides} variant="slide" />
+        </article>
+
+        <article class="class-card exposition-pdf-card">
+          <div class="class-header">
+            <span>{expositionPdf.type}</span>
+            <h3>{expositionPdf.title}</h3>
+          </div>
+          <PdfViewer id="exposicion-viewer-1" src={expositionPdf.href} title={expositionPdf.title} />
+        </article>
+      </section>
+
+      <section class="section feature-band" id="glosario" aria-labelledby="glosario-title">
+        <div class="section-heading compact">
+          <p class="eyebrow">Glosario</p>
+          <h2 id="glosario-title">Conceptos destacados</h2>
+          <p>Una muestra breve del glosario completo para mantener limpio el inicio.</p>
+        </div>
+        <div class="glossary-grid">
+          {
+            highlightedGlossary.map((item) => (
+              <article class="glossary-item">
+                <h3>{item.term}</h3>
+                <p>{item.definition}</p>
+              </article>
+            ))
+          }
+        </div>
+        <a class="text-link" href="/glosario">Ver glosario completo</a>
+      </section>
+
+      <section class="section bibliography" id="bibliografia" aria-labelledby="bibliografia-title">
+        <div class="section-heading compact">
+          <p class="eyebrow">Bibliografía</p>
+          <h2 id="bibliografia-title">Fuentes consultadas</h2>
+          <p>Referencias APA agrupadas por tipo y cerradas por defecto.</p>
+        </div>
+
+        <div class="accordion-list">
+          {
+            bibliographyGroups.map((group) => (
+              <details>
+                <summary>
+                  <span>{group.title}</span>
+                  <small>{group.items.length} referencias</small>
+                </summary>
+                <ol>
+                  {group.items.map((source) => (
+                    <li>{source}</li>
+                  ))}
+                </ol>
+              </details>
+            ))
+          }
+        </div>
+      </section>
+    </main>
+
+    <script define:vars={{ temas }}>
+      const menuToggle = document.querySelector(".menu-toggle");
+      const themeToggle = document.querySelector(".theme-toggle");
+      const navMenu = document.querySelector(".nav-menu");
+      const navLinks = navMenu?.querySelectorAll("a");
+
+      const applyTheme = (theme) => {
+        const nextTheme = theme === "dark" ? "dark" : "light";
+        document.documentElement.dataset.theme = nextTheme;
+        themeToggle?.setAttribute("aria-pressed", String(nextTheme === "dark"));
+        themeToggle?.setAttribute(
+          "aria-label",
+          nextTheme === "dark" ? "Activar modo claro" : "Activar modo nocturno",
+        );
+      };
+
+      applyTheme(document.documentElement.dataset.theme);
+
+      themeToggle?.addEventListener("click", () => {
+        const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        applyTheme(nextTheme);
+        try {
+          localStorage.setItem("theme", nextTheme);
+        } catch {
+          // Local storage can be unavailable in private browsing contexts.
+        }
+      });
+
+      const setActiveLink = (activeLink) => {
+        navLinks?.forEach((item) => item.classList.toggle("is-active", item === activeLink));
+      };
+
+      menuToggle?.addEventListener("click", () => {
+        const isOpen = navMenu?.classList.toggle("is-open") ?? false;
+        menuToggle.setAttribute("aria-expanded", String(isOpen));
+        menuToggle.setAttribute(
+          "aria-label",
+          isOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación",
+        );
+      });
+
+      navLinks?.forEach((link) => {
+        link.addEventListener("click", () => {
+          navMenu.classList.remove("is-open");
+          menuToggle?.setAttribute("aria-expanded", "false");
+          menuToggle?.setAttribute("aria-label", "Abrir menú de navegación");
+          setActiveLink(link);
+        });
+      });
+
+      const initialLink = Array.from(navLinks ?? []).find(
+        (link) => link.getAttribute("href") === window.location.hash,
+      );
+      if (initialLink) setActiveLink(initialLink);
+
+      const selectedTema = document.querySelector("#selected-tema");
+      const selectedTitle = document.querySelector("#selected-title");
+      const selectedComments = document.querySelector("#selected-comments");
+      const topicButtons = document.querySelectorAll("[data-topic-id]");
+
+      topicButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const topic = temas.find((item) => item.id === button.dataset.topicId);
+          if (!topic) return;
+
+          topicButtons.forEach((item) => item.classList.toggle("is-active", item === button));
+          selectedTema.textContent = topic.tema;
+          selectedTitle.textContent = topic.titulo;
+          selectedComments.textContent = topic.comentarios;
+          const viewer = document.querySelector('[data-viewer-id="apuntes-viewer"]');
+          viewer?.dispatchEvent(
+            new CustomEvent("pdf-viewer:load", {
+              detail: { source: topic.pdf },
+            }),
+          );
+        });
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  :root {
+    --bg: #f5efeb;
+    --surface: #ffffff;
+    --text: #2f4156;
+    --text-muted: #567c8d;
+    --accent: #567c8d;
+    --border: #c8d9e6;
+    --shadow-color: rgba(47, 65, 86, 0.12);
+    --ink: var(--text);
+    --steel: var(--accent);
+    --sky: var(--border);
+    --paper: var(--bg);
+    --white: var(--surface);
+    --line: color-mix(in srgb, var(--border) 70%, transparent);
+    --shadow: 0 24px 70px var(--shadow-color);
+    --card-bg: color-mix(in srgb, var(--surface) 78%, transparent);
+    --card-bg-strong: var(--surface);
+    --card-shadow: 0 16px 40px var(--shadow-color);
+    --text-soft: color-mix(in srgb, var(--text) 76%, transparent);
+    --text-subtle: color-mix(in srgb, var(--text) 72%, transparent);
+    --hover-border: color-mix(in srgb, var(--accent) 50%, transparent);
+    --body-gradient: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--border) 38%, transparent),
+      transparent 420px
+    );
+    --hero-overlay:
+      linear-gradient(
+        90deg,
+        rgba(47, 65, 86, 0.91),
+        rgba(47, 65, 86, 0.5) 52%,
+        rgba(47, 65, 86, 0.28)
+      ),
+      linear-gradient(0deg, rgba(47, 65, 86, 0.72), rgba(47, 65, 86, 0.08) 58%);
+    --hero-text-muted: rgba(255, 255, 255, 0.86);
+    --hero-border: rgba(255, 255, 255, 0.44);
+    --page-gutter: clamp(16px, 4vw, 32px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    color: var(--ink);
+    font-family:
+      Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
+    background: var(--paper);
+    scroll-behavior: smooth;
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #16222e;
+    --surface: #1f2e3b;
+    --text: #e9eff4;
+    --text-muted: #9db4c2;
+    --accent: #7fb0c4;
+    --border: #33485a;
+    --shadow-color: rgba(0, 0, 0, 0.45);
+    --card-bg: color-mix(in srgb, var(--surface) 88%, transparent);
+    --card-bg-strong: var(--surface);
+    --text-soft: color-mix(in srgb, var(--text) 78%, transparent);
+    --text-subtle: color-mix(in srgb, var(--text) 72%, transparent);
+    --hover-border: color-mix(in srgb, var(--accent) 45%, transparent);
+    --body-gradient: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--border) 42%, transparent),
+      transparent 420px
+    );
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    overflow-x: hidden;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    overflow-x: hidden;
+    background: var(--body-gradient), var(--paper);
+    transition:
+      background-color 180ms ease,
+      color 180ms ease;
+  }
+
+  img,
+  canvas,
+  svg {
+    max-width: 100%;
+  }
+
+  img {
+    height: auto;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    border-bottom: 1px solid var(--sky);
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .site-header,
+  .catalog-card,
+  .note-card,
+  .class-card,
+  .glossary-item,
+  .accordion-list details,
+  .nav-menu,
+  .menu-toggle,
+  .theme-toggle,
+  .topic-button,
+  .primary-action,
+  .secondary-action,
+  .feature-band,
+  .exposition {
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      color 180ms ease;
+  }
+
+  .navbar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    width: min(1180px, 100%);
+    min-height: 72px;
+    margin: 0 auto;
+    padding-right: max(var(--page-gutter), var(--safe-right));
+    padding-left: max(var(--page-gutter), var(--safe-left));
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    min-width: 0;
+    color: var(--ink);
+  }
+
+  .logo-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    flex: 0 0 auto;
+  }
+
+  .logo-slot {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+  }
+
+  .logo-slot .theme-logo {
+    grid-area: 1 / 1;
+  }
+
+  .theme-logo-dark,
+  :root[data-theme="dark"] .theme-logo-light {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  :root[data-theme="dark"] .theme-logo-dark {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .logo {
+    display: block;
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .logo-taller {
+    max-height: 48px;
+  }
+
+  .student-name {
+    color: var(--ink);
+    font-size: 0.98rem;
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .theme-toggle {
+    position: relative;
+    display: inline-grid;
+    flex: 0 0 auto;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--sky);
+    border-radius: 8px;
+    padding: 0;
+    background: var(--white);
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .theme-toggle:hover,
+  .theme-toggle:focus-visible {
+    background: var(--sky);
+    color: var(--steel);
+  }
+
+  .theme-icon {
+    grid-area: 1 / 1;
+    width: 21px;
+    height: 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease;
+  }
+
+  .theme-icon-moon,
+  :root[data-theme="dark"] .theme-icon-sun {
+    opacity: 0;
+    transform: scale(0.72) rotate(-20deg);
+  }
+
+  :root[data-theme="dark"] .theme-icon-moon {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+
+  .menu-toggle {
+    display: none;
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--sky);
+    border-radius: 8px;
+    padding: 9px 10px;
+    background: var(--white);
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .menu-toggle span {
+    display: block;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--ink);
+  }
+
+  .menu-toggle span + span {
+    margin-top: 6px;
+  }
+
+  .nav-menu {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    font-size: 0.86rem;
+  }
+
+  .nav-menu a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    min-height: 44px;
+    padding: 10px 12px;
+    color: var(--ink);
+    font-weight: 800;
+    transition:
+      background 160ms ease,
+      color 160ms ease;
+  }
+
+  .nav-menu a::after {
+    position: absolute;
+    right: 12px;
+    bottom: 5px;
+    left: 12px;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--steel);
+    content: "";
+    opacity: 0;
+    transform: scaleX(0.45);
+    transition:
+      opacity 160ms ease,
+      transform 160ms ease;
+  }
+
+  .nav-menu a:hover,
+  .nav-menu a:focus-visible,
+  .nav-menu a.is-active {
+    background: var(--sky);
+    color: var(--steel);
+  }
+
+  .nav-menu a:hover::after,
+  .nav-menu a:focus-visible::after,
+  .nav-menu a.is-active::after {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  .hero {
+    position: relative;
+    display: grid;
+    align-items: end;
+    min-height: clamp(520px, 78vh, 760px);
+    overflow: hidden;
+    color: var(--white);
+  }
+
+  .hero img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--hero-overlay);
+  }
+
+  .hero-content {
+    position: relative;
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    padding:
+      clamp(92px, 14vw, 120px)
+      max(var(--page-gutter), var(--safe-right))
+      clamp(64px, 10vw, 86px)
+      max(var(--page-gutter), var(--safe-left));
+  }
+
+  .eyebrow {
+    margin: 0 0 12px;
+    color: var(--steel);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .hero .eyebrow {
+    color: var(--sky);
+  }
+
+  h1,
+  h2,
+  h3,
+  p {
+    overflow-wrap: anywhere;
+  }
+
+  h1 {
+    max-width: 780px;
+    margin: 0;
+    font-size: clamp(3.2rem, 8vw, 6.8rem);
+    line-height: 0.94;
+    letter-spacing: 0;
+  }
+
+  h1 span {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .hero-content > p:not(.eyebrow) {
+    max-width: 640px;
+    margin: 24px 0 0;
+    color: var(--hero-text-muted);
+    font-size: clamp(1.05rem, 2vw, 1.28rem);
+    line-height: 1.65;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 34px;
+  }
+
+  .primary-action,
+  .secondary-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    border-radius: 8px;
+    padding: 0 18px;
+    font-weight: 800;
+  }
+
+  .primary-action {
+    background: var(--white);
+    color: var(--ink);
+  }
+
+  .secondary-action {
+    border: 1px solid var(--hero-border);
+    color: var(--white);
+  }
+
+  .section {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    padding:
+      clamp(64px, 9vw, 86px)
+      max(var(--page-gutter), var(--safe-right))
+      clamp(64px, 9vw, 86px)
+      max(var(--page-gutter), var(--safe-left));
+  }
+
+  .section[id],
+  main[id] {
+    scroll-margin-top: 110px;
+  }
+
+  .section-heading {
+    max-width: 760px;
+    margin-bottom: 34px;
+  }
+
+  .section-heading.compact {
+    max-width: 620px;
+  }
+
+  .section-heading h2,
+  .section-copy h2,
+  .exposition h2 {
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 1.04;
+    letter-spacing: 0;
+  }
+
+  .section-heading p:not(.eyebrow),
+  .section-copy p,
+  .exposition p {
+    color: var(--text-soft);
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: 14px;
+  }
+
+  .catalog-card,
+  .note-card,
+  .class-card,
+  .glossary-item,
+  .accordion-list details {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--card-bg);
+    box-shadow: var(--card-shadow);
+  }
+
+  .catalog-card {
+    min-height: 252px;
+    padding: 22px;
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease,
+      background 180ms ease;
+  }
+
+  .catalog-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--hover-border);
+    background: var(--white);
+  }
+
+  .catalog-card span,
+  .note-card span,
+  .class-header span {
+    color: var(--steel);
+    font-size: 0.74rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .catalog-card h3,
+  .note-card h3,
+  .class-header h3,
+  .glossary-item h3 {
+    margin: 12px 0 10px;
+    color: var(--ink);
+    font-size: 1.18rem;
+  }
+
+  .catalog-card p,
+  .note-card p,
+  .glossary-item p {
+    margin: 0;
+    color: var(--text-subtle);
+    line-height: 1.65;
+  }
+
+  .topic-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .topic-button {
+    min-height: 44px;
+    border: 1px solid var(--sky);
+    border-radius: 999px;
+    padding: 0 14px;
+    background: var(--white);
+    color: var(--ink);
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .topic-button:hover,
+  .topic-button.is-active {
+    background: var(--sky);
+    color: var(--steel);
+  }
+
+  .notes-layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.85fr) minmax(360px, 1.15fr);
+    gap: 22px;
+    align-items: start;
+  }
+
+  .note-card,
+  .class-card {
+    padding: clamp(18px, 3vw, 22px);
+  }
+
+  .note-card h3 {
+    font-size: clamp(1.6rem, 3vw, 2.35rem);
+    line-height: 1.08;
+  }
+
+  .viewer-card {
+    min-width: 0;
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
+    gap: 44px;
+    align-items: start;
+  }
+
+  .split.reverse {
+    grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1fr);
+  }
+
+  .centered-section {
+    max-width: min(100%, 900px);
+  }
+
+  .centered-heading {
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+  }
+
+  .exposition {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    width: 100%;
+    max-width: none;
+    padding-right: max(var(--page-gutter), var(--safe-right), calc((100% - 1180px) / 2));
+    padding-left: max(var(--page-gutter), var(--safe-left), calc((100% - 1180px) / 2));
+    background: var(--white);
+  }
+
+  .exposition div {
+    max-width: 760px;
+  }
+
+  .exposition-files {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    padding-top: 36px;
+  }
+
+  .exposition-carousel-card {
+    grid-column: 1 / -1;
+  }
+
+  .exposition-pdf-card {
+    grid-column: 1 / -1;
+    width: min(100%, 860px);
+    margin: 0 auto;
+  }
+
+  .exposition-pdf-card .class-header {
+    text-align: center;
+  }
+
+  .feature-band {
+    width: 100%;
+    max-width: none;
+    padding-right: max(var(--page-gutter), var(--safe-right), calc((100% - 1180px) / 2));
+    padding-left: max(var(--page-gutter), var(--safe-left), calc((100% - 1180px) / 2));
+    background: var(--sky);
+  }
+
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: 14px;
+  }
+
+  .glossary-item {
+    padding: 24px;
+    background: var(--card-bg);
+  }
+
+  .text-link {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 22px;
+    min-height: 44px;
+    border-bottom: 2px solid var(--steel);
+    color: var(--ink);
+    font-weight: 800;
+  }
+
+  .bibliography {
+    padding-top: 64px;
+  }
+
+  .accordion-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .accordion-list details {
+    overflow: hidden;
+    background: var(--white);
+  }
+
+  .accordion-list summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 20px;
+    min-height: 56px;
+    color: var(--ink);
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .accordion-list summary::marker {
+    color: var(--steel);
+  }
+
+  .accordion-list small {
+    color: var(--steel);
+    font-weight: 800;
+  }
+
+  .accordion-list ol {
+    margin: 0;
+    padding: 0 22px 22px 42px;
+  }
+
+  .accordion-list li {
+    border-top: 1px solid var(--line);
+    padding: 14px 0;
+    color: var(--text-soft);
+    line-height: 1.65;
+  }
+
+  @media (max-width: 1040px) {
+    .navbar {
+      gap: 18px;
+    }
+
+    .brand {
+      gap: 14px;
+    }
+
+    .logo-group {
+      gap: 9px;
+    }
+
+    .student-name {
+      font-size: 0.9rem;
+    }
+
+    .nav-menu a {
+      padding-right: 9px;
+      padding-left: 9px;
+    }
+
+    .notes-layout,
+    .split,
+    .split.reverse,
+    .exposition-files {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .navbar {
+      min-height: 70px;
+      padding:
+        10px
+        max(var(--page-gutter), var(--safe-right))
+        10px
+        max(var(--page-gutter), var(--safe-left));
+    }
+
+    .logo {
+      height: 34px;
+    }
+
+    .logo-taller {
+      max-height: 40px;
+    }
+
+    .menu-toggle {
+      display: block;
+    }
+
+    .nav-menu {
+      position: absolute;
+      top: calc(100% + 1px);
+      right: 0;
+      left: 0;
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 4px;
+      border: 1px solid var(--sky);
+      border-top: 0;
+      border-radius: 0 0 8px 8px;
+      padding: 10px;
+      padding-bottom: calc(10px + var(--safe-bottom));
+      background: var(--paper);
+      box-shadow: var(--card-shadow);
+    }
+
+    .nav-menu.is-open {
+      display: flex;
+    }
+
+    .nav-menu a {
+      min-height: 44px;
+      padding: 12px 14px;
+    }
+
+    .nav-menu a::after {
+      right: 14px;
+      left: 14px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .navbar,
+    .hero-content,
+    .section {
+      width: 100%;
+    }
+
+    .brand {
+      flex: 1 1 auto;
+      gap: 10px;
+    }
+
+    .logo-group {
+      gap: 7px;
+    }
+
+    .logo {
+      height: 30px;
+    }
+
+    .logo-taller {
+      max-height: 34px;
+    }
+
+    .student-name {
+      max-width: 42vw;
+      white-space: normal;
+    }
+
+    .hero {
+      min-height: clamp(620px, 88svh, 700px);
+    }
+
+    .hero-content {
+      padding-bottom: calc(56px + var(--safe-bottom));
+    }
+
+    h1 {
+      font-size: clamp(2.65rem, 13vw, 4.5rem);
+    }
+
+    .hero-actions,
+    .exposition {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .primary-action,
+    .secondary-action {
+      width: 100%;
+    }
+
+    .section {
+      padding:
+        clamp(56px, 12vw, 62px)
+        max(var(--page-gutter), var(--safe-right))
+        clamp(56px, 12vw, 62px)
+        max(var(--page-gutter), var(--safe-left));
+    }
+
+    .note-card,
+    .class-card {
+      padding: 18px;
+    }
+
+    .accordion-list summary {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .accordion-list ol {
+      padding-right: 18px;
+      padding-left: 30px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      transition: none !important;
+    }
+  }
+</style>

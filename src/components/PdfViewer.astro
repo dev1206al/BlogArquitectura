@@ -1,0 +1,297 @@
+---
+type Props = {
+  id: string;
+  src: string;
+  title: string;
+};
+
+const { id, src, title } = Astro.props;
+---
+
+<div class="pdf-viewer" data-pdf-viewer data-viewer-id={id} data-src={src}>
+  <div class="pdf-controls" aria-label={`Controles de PDF: ${title}`}>
+    <button type="button" data-prev aria-label="Página anterior">Anterior</button>
+    <span data-page-status>0 / 0</span>
+    <button type="button" data-next aria-label="Página siguiente">Siguiente</button>
+    <label>
+      Zoom
+      <select data-zoom aria-label="Zoom del PDF">
+        <option value="1.1">110%</option>
+        <option value="1.35" selected>135%</option>
+        <option value="1.6">160%</option>
+        <option value="1.85">185%</option>
+      </select>
+    </label>
+  </div>
+  <div class="pdf-canvas-wrap">
+    <canvas data-canvas aria-label={title}></canvas>
+    <p data-message>Cargando PDF...</p>
+  </div>
+</div>
+
+<script>
+  import * as pdfjsLib from "pdfjs-dist/build/pdf.mjs";
+  import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+
+  const instances = (window.__pdfViewerInstances ??= new Map());
+
+  const createViewer = (root) => {
+    const viewerId = root.dataset.viewerId;
+    const canvas = root.querySelector("[data-canvas]");
+    const context = canvas.getContext("2d");
+    const status = root.querySelector("[data-page-status]");
+    const message = root.querySelector("[data-message]");
+    const prev = root.querySelector("[data-prev]");
+    const next = root.querySelector("[data-next]");
+    const zoom = root.querySelector("[data-zoom]");
+
+    const state = {
+      source: "",
+      document: null,
+      page: 1,
+      total: 0,
+      scale: Number(zoom.value),
+      task: null,
+    };
+
+    const setMessage = (text) => {
+      message.textContent = text;
+      message.hidden = !text;
+    };
+
+    const updateControls = () => {
+      status.textContent = `${state.page} / ${state.total}`;
+      prev.disabled = state.page <= 1;
+      next.disabled = state.page >= state.total;
+    };
+
+    const renderPage = async () => {
+      if (!state.document) return;
+
+      if (state.task) {
+        state.task.cancel();
+      }
+
+      const page = await state.document.getPage(state.page);
+      const viewport = page.getViewport({ scale: state.scale });
+      const ratio = Math.max(window.devicePixelRatio || 1, 2);
+
+      canvas.width = Math.floor(viewport.width * ratio);
+      canvas.height = Math.floor(viewport.height * ratio);
+      canvas.style.width = `${viewport.width}px`;
+      canvas.style.height = `${viewport.height}px`;
+
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      context.clearRect(0, 0, viewport.width, viewport.height);
+
+      state.task = page.render({ canvasContext: context, viewport });
+
+      try {
+        await state.task.promise;
+        setMessage("");
+      } catch (error) {
+        if (error?.name !== "RenderingCancelledException") {
+          setMessage("No se pudo renderizar esta página.");
+        }
+      } finally {
+        state.task = null;
+      }
+
+      updateControls();
+    };
+
+    const load = async (source) => {
+      if (!source || source === state.source) return;
+
+      state.source = source;
+      state.page = 1;
+      state.total = 0;
+      state.document = null;
+      canvas.removeAttribute("style");
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      status.textContent = "0 / 0";
+      setMessage("Cargando PDF...");
+
+      try {
+        state.document = await pdfjsLib.getDocument({ url: source }).promise;
+        state.total = state.document.numPages;
+        await renderPage();
+      } catch {
+        setMessage("No se pudo cargar el PDF.");
+      }
+    };
+
+    prev.addEventListener("click", () => {
+      if (state.page > 1) {
+        state.page -= 1;
+        renderPage();
+      }
+    });
+
+    next.addEventListener("click", () => {
+      if (state.page < state.total) {
+        state.page += 1;
+        renderPage();
+      }
+    });
+
+    zoom.addEventListener("change", () => {
+      state.scale = Number(zoom.value);
+      renderPage();
+    });
+
+    const instance = { load };
+    instances.set(viewerId, instance);
+
+    root.addEventListener("pdf-viewer:load", (event) => {
+      load(event.detail.source);
+    });
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            load(root.dataset.src);
+            observer.disconnect();
+          }
+        },
+        { rootMargin: "220px" },
+      );
+      observer.observe(root);
+    } else {
+      load(root.dataset.src);
+    }
+  };
+
+  document.querySelectorAll("[data-pdf-viewer]").forEach((root) => {
+    if (!instances.has(root.dataset.viewerId)) {
+      createViewer(root);
+    }
+  });
+</script>
+
+<style>
+  .pdf-viewer {
+    overflow: hidden;
+    width: 100%;
+    max-width: 860px;
+    margin-inline: auto;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--white);
+    box-shadow: var(--card-shadow);
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      color 180ms ease;
+  }
+
+  .pdf-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--line);
+    padding: 12px;
+    background: var(--ink);
+    color: var(--white);
+    font-size: 0.84rem;
+    font-weight: 800;
+  }
+
+  .pdf-controls button,
+  .pdf-controls select {
+    min-height: 44px;
+    border: 1px solid var(--sky);
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--ink);
+    font: inherit;
+  }
+
+  .pdf-controls button {
+    padding: 0 12px;
+    cursor: pointer;
+  }
+
+  .pdf-controls button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
+  .pdf-controls label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+  }
+
+  .pdf-canvas-wrap {
+    position: relative;
+    display: grid;
+    place-items: start center;
+    justify-items: center;
+    min-height: 620px;
+    max-height: 720px;
+    overflow: auto;
+    padding: 18px;
+    background: var(--paper);
+  }
+
+  .pdf-canvas-wrap canvas {
+    max-width: 100%;
+    height: auto;
+    background: var(--white);
+    box-shadow: 0 10px 26px var(--shadow-color);
+  }
+
+  .pdf-canvas-wrap p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    color: var(--ink);
+    font-weight: 800;
+    transform: translate(-50%, -50%);
+  }
+
+  .pdf-canvas-wrap p[hidden] {
+    display: none;
+  }
+
+  @media (max-width: 640px) {
+    .pdf-viewer {
+      max-width: 100%;
+    }
+
+    .pdf-controls {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 8px;
+      padding: 10px;
+    }
+
+    .pdf-controls button {
+      padding: 0 10px;
+    }
+
+    .pdf-controls label {
+      grid-column: 1 / -1;
+      justify-content: center;
+    }
+
+    .pdf-controls select {
+      min-width: 120px;
+    }
+
+    .pdf-canvas-wrap {
+      min-height: min(480px, 62svh);
+      max-height: 62svh;
+      padding: 12px;
+    }
+  }
+</style>
